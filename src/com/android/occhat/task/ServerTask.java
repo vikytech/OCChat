@@ -13,9 +13,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.channels.ServerSocketChannel;
 
-public class ServerTask extends AsyncTask{
-    public static final int SERVERPORT = 8888;
-    public static String SERVERIP = "10.16.3.174";
+public class ServerTask extends AsyncTask {
+    private static final int SERVERPORT = 8888;
+    private String serverIp;
     private TextView serverStatus;
     private Handler handler = new Handler();
     private ServerSocket serverSocket;
@@ -24,12 +24,13 @@ public class ServerTask extends AsyncTask{
     @Override
     protected Object doInBackground(Object... params) {
         serverStatus = (TextView) params[0];
+        serverIp = String.valueOf(params[1]);
         try {
-            if (SERVERIP != null) {
+            if (serverIp != null) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        serverStatus.setText("Listening on IP: " + SERVERIP);
+                        serverStatus.setText("Listening on IP: " + serverIp);
                     }
                 });
                 ServerSocketChannel channel = ServerSocketChannel.open();
@@ -43,30 +44,27 @@ public class ServerTask extends AsyncTask{
                             serverStatus.setText("Connected.");
                         }
                     });
-
-                    try {
-                        BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                        while ((line = in.readLine()) != null) {
-                            Log.d("ServerActivity", line);
-                            serverStatus.setText(line);
+                    while (true) {
+                        try {
+                            BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                            line = in.readLine();
+                            Log.d("Test message", line);
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    serverStatus.setText(line);
-                                    // DO WHATEVER YOU WANT TO THE FRONT END
-                                    // THIS IS WHERE YOU CAN BE CREATIVE
+                                    serverStatus.append(":" + line + '\n');
                                 }
                             });
+                            break;
+                        } catch (Exception e) {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    serverStatus.setText("Oops. Connection interrupted. Please reconnect your phones.");
+                                }
+                            });
+                            e.printStackTrace();
                         }
-                        break;
-                    } catch (Exception e) {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                serverStatus.setText("Oops. Connection interrupted. Please reconnect your phones.");
-                            }
-                        });
-                        e.printStackTrace();
                     }
                 }
             } else {
@@ -94,7 +92,7 @@ public class ServerTask extends AsyncTask{
         try {
             serverSocket.close();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         super.onPostExecute(o);
     }

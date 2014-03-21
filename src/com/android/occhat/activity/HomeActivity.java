@@ -14,19 +14,13 @@ public class HomeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
+        ipAddress = (EditText) findViewById(R.id.ipAddress);
     }
 
     public void startChatting(View view) {
         Intent openChatWindow;
         openChatWindow = new Intent(this, ClientActivity.class);
-        ipAddress = (EditText) findViewById(R.id.ipAddress);
         openChatWindow.putExtra("ipAddress", ipAddress.getText());
         startActivity(openChatWindow);
-    }
-
-    public void startServer(View view) {
-        Intent server;
-        server = new Intent(this, ServerActivity.class);
-        startActivity(server);
     }
 }
