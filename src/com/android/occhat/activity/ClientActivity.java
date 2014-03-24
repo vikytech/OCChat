@@ -46,6 +46,12 @@ public class ClientActivity extends Activity {
         serverTask.execute(ipAddress, status, messagesLayout, context);
     }
 
+    @Override
+    public void onBackPressed() {
+        serverTask.cancel(true);
+        super.onBackPressed();
+    }
+
     public void sendMessage(View view) {
         new ClientThread().start();
         TextView message = new TextView(context);
