@@ -5,15 +5,28 @@
                 android:layout_height="fill_parent">
 
     <LinearLayout
+            android:layout_height="40dip"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-        <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/server_status"
+            android:id="@+id/statusLayout">
+        <TextView android:id="@+id/status"
+                  android:layout_height="match_parent"
+                  android:layout_width="wrap_content"
+                  android:layout_weight="2"
                 />
     </LinearLayout>
+    <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_below="@id/statusLayout"
+            android:layout_height="fill_parent">
 
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/messageLayout"
+                android:orientation="vertical"
+                android:layout_marginBottom="5dip"
+                android:scrollbars="vertical"/>
+    </ScrollView>
     <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -21,16 +34,15 @@
         <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Chat away!"
+                android:hint="@string/chat_away"
                 android:id="@+id/chat_box"
-                android:layout_weight="4"/>
+                android:layout_weight="2"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/send_message"
-                android:layout_weight="2"
-                android:layout_toRightOf="@id/chat_box"
-                android:text="Send!"
+                android:layout_weight="1"
+                android:text="@string/send"
                 android:onClick="sendMessage"
                 />
     </LinearLayout>

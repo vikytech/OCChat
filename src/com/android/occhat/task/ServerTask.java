@@ -1,8 +1,10 @@
 package com.android.occhat.task;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -16,21 +18,26 @@ import java.nio.channels.ServerSocketChannel;
 public class ServerTask extends AsyncTask {
     private static final int SERVERPORT = 8888;
     private String serverIp;
-    private TextView serverStatus;
+    private LinearLayout messagesLayout;
     private Handler handler = new Handler();
     private ServerSocket serverSocket;
-    private String line = null;
+    private String line = "";
+    private TextView status;
+    private Context context;
 
     @Override
     protected Object doInBackground(Object... params) {
-        serverStatus = (TextView) params[0];
-        serverIp = String.valueOf(params[1]);
+        serverIp = String.valueOf(params[0]);
+        status = (TextView) params[1];
+        messagesLayout = (LinearLayout) params[2];
+        context = (Context) params[3];
+
         try {
             if (serverIp != null) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        serverStatus.setText("Listening on IP: " + serverIp);
+                        status.setText("Listening on IP: " + serverIp);
                     }
                 });
                 ServerSocketChannel channel = ServerSocketChannel.open();
@@ -41,7 +48,7 @@ public class ServerTask extends AsyncTask {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            serverStatus.setText("Connected.");
+                            status.setText("Connected.");
                         }
                     });
                     while (true) {
@@ -52,7 +59,9 @@ public class ServerTask extends AsyncTask {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    serverStatus.append(":" + line + '\n');
+                                    TextView message = new TextView(context);
+                                    message.setText(line);
+                                    messagesLayout.addView(message);
                                 }
                             });
                             break;
@@ -60,7 +69,7 @@ public class ServerTask extends AsyncTask {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    serverStatus.setText("Oops. Connection interrupted. Please reconnect your phones.");
+                                    status.setText("Oops. Connection interrupted. Please reconnect your phones.");
                                 }
                             });
                             e.printStackTrace();
@@ -71,7 +80,7 @@ public class ServerTask extends AsyncTask {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        serverStatus.setText("Couldn't detect internet connection.");
+                        status.setText("Couldn't detect internet connection.");
                     }
                 });
             }
@@ -79,7 +88,7 @@ public class ServerTask extends AsyncTask {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    serverStatus.setText("Error");
+                    status.setText("Error");
                 }
             });
             e.printStackTrace();

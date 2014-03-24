@@ -1,10 +1,12 @@
 package com.android.occhat.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.occhat.R;
 import com.android.occhat.task.ServerTask;
@@ -23,8 +25,11 @@ public class ClientActivity extends Activity {
     private PrintWriter out;
     private EditText chatBox;
     private Socket socket;
-    private TextView serverStatus;
-    private boolean connected = false;
+    private LinearLayout messagesLayout;
+    private ServerTask serverTask;
+    private TextView status;
+    private Context context;
+    private String senderMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,29 +38,21 @@ public class ClientActivity extends Activity {
 
         chatBox = (EditText) findViewById(R.id.chat_box);
         ipAddress = String.valueOf(getIntent().getExtras().get("ipAddress"));
-        serverStatus = (TextView) findViewById(R.id.server_status);
+        messagesLayout = (LinearLayout) findViewById(R.id.messageLayout);
+        status = (TextView) findViewById(R.id.status);
+        context = this;
 
-        ServerTask serverTask = new ServerTask();
-        serverTask.execute(serverStatus, ipAddress);
+        serverTask = new ServerTask();
+        serverTask.execute(ipAddress, status, messagesLayout, context);
     }
 
     public void sendMessage(View view) {
         new ClientThread().start();
-    }
-
-    public void refresh(View view) {
-        new ClientThread().start();
-    }
-
-    @Override
-    protected void onStop() {
-        try {
-            socket.close();
-            Log.d("ClientActivity", "C: Closed.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        super.onStop();
+        TextView message = new TextView(context);
+        senderMessage = String.valueOf(chatBox.getText());
+        message.setText(senderMessage);
+        messagesLayout.addView(message);
+        chatBox.setText("");
     }
 
     public class ClientThread extends Thread {
@@ -73,7 +70,7 @@ public class ClientActivity extends Activity {
                 try {
                     Log.d("ClientActivity", "C: Sending command.");
                     out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-                    out.write(String.valueOf(chatBox.getText()));
+                    out.write(senderMessage);
                     out.flush();
                     Log.d("ClientActivity", "C: Sent.");
                 } catch (Exception e) {
@@ -81,10 +78,10 @@ public class ClientActivity extends Activity {
                 }
             } catch (Exception e) {
                 Log.e("ClientActivity", "C: Error", e);
-                connected = false;
             } finally {
                 try {
                     socket.close();
+                    Log.d("ClientActivity", "C: Closed.");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
