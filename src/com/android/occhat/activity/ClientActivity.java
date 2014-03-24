@@ -56,7 +56,7 @@ public class ClientActivity extends Activity {
         new ClientThread().start();
         TextView message = new TextView(context);
         senderMessage = String.valueOf(chatBox.getText());
-        message.setText(senderMessage);
+        message.setText("Me: " + senderMessage);
         messagesLayout.addView(message);
         chatBox.setText("");
     }
