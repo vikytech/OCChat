@@ -3,8 +3,11 @@ package com.android.occhat.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,6 +33,7 @@ public class ClientActivity extends Activity {
     private TextView status;
     private Context context;
     private String senderMessage;
+    private Button sendButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,23 @@ public class ClientActivity extends Activity {
         messagesLayout = (LinearLayout) findViewById(R.id.messageLayout);
         status = (TextView) findViewById(R.id.status);
         context = this;
+        sendButton = (Button) findViewById(R.id.send_message);
+
+        chatBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                sendButton.setEnabled(!s.toString().matches("\\s++"));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (String.valueOf(chatBox.getText()).isEmpty()) sendButton.setEnabled(false);
+            }
+        });
 
         serverTask = new ServerTask();
         serverTask.execute(ipAddress, status, messagesLayout, context);
