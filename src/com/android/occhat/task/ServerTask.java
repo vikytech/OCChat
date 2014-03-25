@@ -4,9 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.occhat.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class ServerTask extends AsyncTask {
                                 public void run() {
                                     TextView message = new TextView(context);
                                     message.setText(line);
-                                    message.setBackgroundColor(R.color.in_msg);
+                                    message.setGravity(Gravity.RIGHT);
                                     messagesLayout.addView(message);
                                 }
                             });

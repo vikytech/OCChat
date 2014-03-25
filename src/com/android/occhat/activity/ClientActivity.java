@@ -78,6 +78,7 @@ public class ClientActivity extends Activity {
         TextView message = new TextView(context);
         senderMessage = String.valueOf(chatBox.getText());
         message.setText("Me: " + senderMessage);
+        message.setTextColor(R.color.in_msg);
         messagesLayout.addView(message);
         chatBox.setText("");
     }

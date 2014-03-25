@@ -5,4 +5,5 @@
     <string name="chat_away">Chat away!</string>
     <string name="send">Send!</string>
     <string name="friends_ip_address">Friend\'s Address</string>
+    <string name="create_hotspot">Create Hotspot</string>
 </resources>

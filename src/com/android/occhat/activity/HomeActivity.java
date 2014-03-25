@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.android.occhat.R;
 
+import java.lang.reflect.Method;
+
 public class HomeActivity extends Activity {
     private EditText ipAddress;
     private WifiManager manager;
@@ -30,5 +32,30 @@ public class HomeActivity extends Activity {
         openChatWindow = new Intent(this, ClientActivity.class);
         openChatWindow.putExtra("ipAddress", ipAddress.getText());
         startActivity(openChatWindow);
+    }
+
+    public void createHotSpot(View view) {
+        Method[] methods = manager.getClass().getDeclaredMethods();
+        boolean enabled = false;
+        for (Method method : methods) {
+            if (method.getName().equals("isWifiApEnabled")) {
+                try {
+                    enabled = (Boolean) method.invoke(manager);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+        for (Method method : methods) {
+            if (method.getName().equals("setWifiApEnabled")) {
+                try {
+                    method.invoke(manager, null, !enabled);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                break;
+            }
+        }
     }
 }
