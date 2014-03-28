@@ -1,6 +1,8 @@
 package com.android.occhat.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -35,12 +37,36 @@ public class HomeActivity extends Activity {
     }
 
     public void createHotSpot(View view) {
+        if (manager.isWifiEnabled()) {
+            AlertDialog.Builder createHotspotDialog = new AlertDialog.Builder(this);
+            createHotspotDialog.setTitle(getString(R.string.creating_hotspot))
+                    .setMessage(getString(R.string.wifi_off_warning))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            toggleHotspot();
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .create()
+                    .show();
+        } else toggleHotspot();
+    }
+
+    private void toggleHotspot() {
         Method[] methods = manager.getClass().getDeclaredMethods();
-        boolean enabled = false;
+        Boolean hotSpotStatus = false;
         for (Method method : methods) {
             if (method.getName().equals("isWifiApEnabled")) {
                 try {
-                    enabled = (Boolean) method.invoke(manager);
+                    manager.setWifiEnabled(false);
+                    hotSpotStatus = (Boolean) method.invoke(manager);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -50,7 +76,7 @@ public class HomeActivity extends Activity {
         for (Method method : methods) {
             if (method.getName().equals("setWifiApEnabled")) {
                 try {
-                    method.invoke(manager, null, !enabled);
+                    method.invoke(manager, null, !hotSpotStatus);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

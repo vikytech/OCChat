@@ -6,4 +6,8 @@
     <string name="send">Send!</string>
     <string name="friends_ip_address">Friend\'s Address</string>
     <string name="create_hotspot">Create Hotspot</string>
+    <string name="creating_hotspot">Creating Hotspot</string>
+    <string name="wifi_off_warning">Wifi will be disabled to turn on Hotspot.\nDo you want to continue?</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>
