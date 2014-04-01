@@ -25,6 +25,7 @@ public class HomeActivity extends Activity {
     private WifiManager manager;
     private String myIP;
     private ListView deviceListView;
+    private ListDeviceTask devices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class HomeActivity extends Activity {
         });
 
         myIpAddress.setText(myIpAddress.getText());
-        ListDeviceTask devices = new ListDeviceTask();
+        devices = new ListDeviceTask();
         devices.execute(myIP, deviceListView, this);
 
     }

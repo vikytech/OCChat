@@ -59,8 +59,8 @@ public class ListDeviceTask extends AsyncTask {
 
     @Override
     protected void onPostExecute(Object o) {
-        Toast.makeText(context, "Friends' scan complete", Toast.LENGTH_LONG);
         this.cancel(true);
+        Toast.makeText(context, "Friends' scan complete", Toast.LENGTH_LONG).show();
         super.onPostExecute(o);
     }
 }
