@@ -8,25 +8,49 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.format.Formatter;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import com.android.occhat.R;
+import com.android.occhat.task.ListDeviceTask;
 
 import java.lang.reflect.Method;
+
+import static android.widget.AdapterView.OnItemLongClickListener;
+import static com.android.occhat.R.string.*;
 
 public class HomeActivity extends Activity {
     private EditText ipAddress;
     private WifiManager manager;
+    private String myIP;
+    private ListView deviceListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
+
         manager = (WifiManager) this.getSystemService(WIFI_SERVICE);
-        String myIP = Formatter.formatIpAddress(manager.getConnectionInfo().getIpAddress());
+        myIP = Formatter.formatIpAddress(manager.getConnectionInfo().getIpAddress());
         TextView myIpAddress = (TextView) findViewById(R.id.my_ip_address);
         myIpAddress.setText("Your IP Address: " + myIP);
+
         ipAddress = (EditText) findViewById(R.id.ipAddress);
+        deviceListView = (ListView) findViewById(R.id.onlineDevices);
+        deviceListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                String targetDeviceIP = ((TextView) view).getText().toString();
+                ipAddress.setText(targetDeviceIP);
+                return true;
+            }
+        });
+
+        myIpAddress.setText(myIpAddress.getText());
+        ListDeviceTask devices = new ListDeviceTask();
+        devices.execute(myIP, deviceListView, this);
+
     }
 
     public void startChatting(View view) {
@@ -39,16 +63,16 @@ public class HomeActivity extends Activity {
     public void createHotSpot(View view) {
         if (manager.isWifiEnabled()) {
             AlertDialog.Builder createHotspotDialog = new AlertDialog.Builder(this);
-            createHotspotDialog.setTitle(getString(R.string.creating_hotspot))
-                    .setMessage(getString(R.string.wifi_off_warning))
+            createHotspotDialog.setTitle(getString(creating_hotspot))
+                    .setMessage(getString(wifi_off_warning))
                     .setCancelable(false)
-                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(ok), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             toggleHotspot();
                         }
                     })
-                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getString(cancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();

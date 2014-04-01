@@ -36,5 +36,12 @@
             android:layout_below="@id/my_ip_address"
             android:id="@+id/toggle_hotspot"
             android:onClick="createHotSpot"/>
+    <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/onlineDevices"
+            android:layout_marginTop="5dip"
+            android:layout_marginLeft="5dip"
+            android:layout_below="@id/toggle_hotspot"/>
 
 </RelativeLayout>
