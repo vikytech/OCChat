@@ -10,4 +10,7 @@
     <string name="wifi_off_warning">Wifi will be disabled to turn on Hotspot.\nDo you want to continue?</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="warning_for_valid_ip">Please enter a valid IP address</string>
+    <string name="device_scan_complete">Friends\' scan complete</string>
+    <string name="device_scan_started">Friends\' Scan Started !!</string>
 </resources>

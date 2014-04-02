@@ -2,6 +2,7 @@ package com.android.occhat.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -64,7 +65,7 @@ public class ClientActivity extends Activity {
         });
 
         serverTask = new ServerTask();
-        serverTask.execute(ipAddress, status, messagesLayout, context);
+        serverTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ipAddress, status, messagesLayout, context);
     }
 
     @Override

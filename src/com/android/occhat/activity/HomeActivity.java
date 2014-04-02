@@ -5,13 +5,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Formatter;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import com.android.occhat.R;
 import com.android.occhat.task.ListDeviceTask;
 
@@ -50,15 +48,21 @@ public class HomeActivity extends Activity {
 
         myIpAddress.setText(myIpAddress.getText());
         devices = new ListDeviceTask();
-        devices.execute(myIP, deviceListView, this);
+        Toast.makeText(this, R.string.device_scan_started, Toast.LENGTH_LONG).show();
+        devices.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, myIP, deviceListView, this);
 
     }
 
     public void startChatting(View view) {
         Intent openChatWindow;
         openChatWindow = new Intent(this, ClientActivity.class);
-        openChatWindow.putExtra("ipAddress", ipAddress.getText());
-        startActivity(openChatWindow);
+        String ipAddressText = String.valueOf(ipAddress.getText());
+        if (ipAddressText.matches("\\d+.\\d+.\\d+.\\d+")) {
+            openChatWindow.putExtra("ipAddress", ipAddressText);
+            startActivity(openChatWindow);
+        } else
+            Toast.makeText(this, getString(R.string.warning_for_valid_ip), Toast.LENGTH_LONG).show();
+
     }
 
     public void createHotSpot(View view) {
