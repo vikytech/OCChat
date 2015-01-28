@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -71,7 +72,7 @@ public class ClientActivity extends Activity {
         });
 
         serverTask = new ServerTask();
-        serverTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ipAddress, status, messagesLayout, context);
+        serverTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ipAddress, status, messagesLayout, context, scrollView);
     }
 
     @Override
@@ -84,7 +85,8 @@ public class ClientActivity extends Activity {
         new ClientThread().start();
         TextView message = new TextView(context);
         senderMessage = String.valueOf(chatBox.getText());
-        message.setText("Me: " + senderMessage);
+        String differentiateClientText = "<font color='gray'>Me: </font>";
+        message.setText(Html.fromHtml(differentiateClientText + senderMessage), TextView.BufferType.SPANNABLE);
         message.setTextColor(getResources().getColor(R.color.in_msg));
         messagesLayout.addView(message);
         chatBox.setText("");

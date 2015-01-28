@@ -5,7 +5,9 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -25,6 +27,7 @@ public class ServerTask extends AsyncTask {
     private String line = "";
     private TextView status;
     private Context context;
+    private ScrollView scrollView;
 
     @Override
     protected Object doInBackground(Object... params) {
@@ -32,6 +35,7 @@ public class ServerTask extends AsyncTask {
         status = (TextView) params[1];
         messagesLayout = (LinearLayout) params[2];
         context = (Context) params[3];
+        scrollView = (ScrollView) params[4];
 
         try {
             if (serverIp != null) {
@@ -64,6 +68,12 @@ public class ServerTask extends AsyncTask {
                                     message.setText(line);
                                     message.setGravity(Gravity.RIGHT);
                                     messagesLayout.addView(message);
+                                    final Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        public void run() {
+                                            scrollView.fullScroll(HorizontalScrollView.FOCUS_DOWN);
+                                        }
+                                    }, 100L);
                                 }
                             });
                             break;
