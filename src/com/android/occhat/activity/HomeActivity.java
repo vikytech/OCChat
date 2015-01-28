@@ -9,14 +9,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Formatter;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.occhat.R;
 import com.android.occhat.task.ListDeviceTask;
 
 import java.lang.reflect.Method;
 
 import static android.widget.AdapterView.OnItemLongClickListener;
-import static com.android.occhat.R.string.*;
+import static com.android.occhat.R.string;
 
 public class HomeActivity extends Activity {
     private EditText ipAddress;
@@ -48,9 +53,8 @@ public class HomeActivity extends Activity {
 
         myIpAddress.setText(myIpAddress.getText());
         devices = new ListDeviceTask();
-        Toast.makeText(this, R.string.device_scan_started, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, string.device_scan_started, Toast.LENGTH_LONG).show();
         devices.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, myIP, deviceListView, this);
-
     }
 
     public void startChatting(View view) {
@@ -61,23 +65,23 @@ public class HomeActivity extends Activity {
             openChatWindow.putExtra("ipAddress", ipAddressText);
             startActivity(openChatWindow);
         } else
-            Toast.makeText(this, getString(R.string.warning_for_valid_ip), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(string.warning_for_valid_ip), Toast.LENGTH_LONG).show();
 
     }
 
     public void createHotSpot(View view) {
         if (manager.isWifiEnabled()) {
             AlertDialog.Builder createHotspotDialog = new AlertDialog.Builder(this);
-            createHotspotDialog.setTitle(getString(creating_hotspot))
-                    .setMessage(getString(wifi_off_warning))
+            createHotspotDialog.setTitle(getString(string.creating_hotspot))
+                    .setMessage(getString(string.wifi_off_warning))
                     .setCancelable(false)
-                    .setPositiveButton(getString(ok), new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(string.ok), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             toggleHotspot();
                         }
                     })
-                    .setNegativeButton(getString(cancel), new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getString(string.cancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();

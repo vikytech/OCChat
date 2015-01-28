@@ -21,13 +21,16 @@
             android:id="@+id/chat_area"
             android:layout_alignParentBottom="true">
         <EditText
-                android:layout_width="wrap_content"
+            android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:hint="@string/chat_away"
                 android:id="@+id/chat_box"
-                android:layout_weight="2"/>
+            android:layout_weight="2"
+            android:scrollbars="vertical"
+            android:maxLines="3" />
+
         <Button
-                android:layout_width="wrap_content"
+            android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:id="@+id/send_message"
                 android:layout_weight="1"
@@ -41,14 +44,14 @@
             android:layout_width="match_parent"
             android:layout_below="@id/statusLayout"
             android:layout_above="@id/chat_area"
-            android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/chat_scroll_view">
 
-        <LinearLayout
+    <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/messageLayout"
                 android:orientation="vertical"
-                android:layout_margin="5dip"
                 android:scrollbars="vertical"/>
     </ScrollView>
 

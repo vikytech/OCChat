@@ -4,14 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.android.occhat.R;
 import com.android.occhat.task.ServerTask;
 
@@ -35,6 +39,7 @@ public class ClientActivity extends Activity {
     private Context context;
     private String senderMessage;
     private Button sendButton;
+    private ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,7 @@ public class ClientActivity extends Activity {
         status = (TextView) findViewById(R.id.status);
         context = this;
         sendButton = (Button) findViewById(R.id.send_message);
+        scrollView = (ScrollView) findViewById(R.id.chat_scroll_view);
 
         chatBox.addTextChangedListener(new TextWatcher() {
             @Override
@@ -79,9 +85,16 @@ public class ClientActivity extends Activity {
         TextView message = new TextView(context);
         senderMessage = String.valueOf(chatBox.getText());
         message.setText("Me: " + senderMessage);
-        message.setTextColor(R.color.in_msg);
+        message.setTextColor(getResources().getColor(R.color.in_msg));
         messagesLayout.addView(message);
         chatBox.setText("");
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                scrollView.fullScroll(HorizontalScrollView.FOCUS_DOWN);
+            }
+        }, 100L);
+
     }
 
     public class ClientThread extends Thread {
