@@ -10,9 +10,9 @@ import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -30,6 +30,7 @@ import java.net.Socket;
 import java.nio.channels.SocketChannel;
 
 public class ClientActivity extends Activity {
+    private final String EMPTY_STRING_REGEX = "\\s++";
     private String ipAddress = "";
     private PrintWriter out;
     private EditText chatBox;
@@ -39,7 +40,7 @@ public class ClientActivity extends Activity {
     private TextView status;
     private Context context;
     private String senderMessage;
-    private Button sendButton;
+    private ImageButton sendButton;
     private ScrollView scrollView;
 
     @Override
@@ -52,8 +53,9 @@ public class ClientActivity extends Activity {
         messagesLayout = (LinearLayout) findViewById(R.id.messageLayout);
         status = (TextView) findViewById(R.id.status);
         context = this;
-        sendButton = (Button) findViewById(R.id.send_message);
+        sendButton = (ImageButton) findViewById(R.id.send_message);
         scrollView = (ScrollView) findViewById(R.id.chat_scroll_view);
+        sendButton.setEnabled(false);
 
         chatBox.addTextChangedListener(new TextWatcher() {
             @Override
@@ -62,7 +64,7 @@ public class ClientActivity extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                sendButton.setEnabled(!s.toString().matches("\\s++"));
+                sendButton.setEnabled(!s.toString().matches(EMPTY_STRING_REGEX));
             }
 
             @Override

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.android.occhat.R;
 import com.android.occhat.task.ListDeviceTask;
+import com.android.occhat.task.WifiReceiver;
 
 import java.lang.reflect.Method;
 
@@ -24,6 +25,7 @@ import static android.widget.AdapterView.OnItemLongClickListener;
 import static com.android.occhat.R.string;
 
 public class HomeActivity extends Activity {
+    private final String IP_ADDRESS_FORMAT_REGEX = "\\d+.\\d+.\\d+.\\d+";
     private EditText ipAddress;
     private WifiManager manager;
     private String myIP;
@@ -53,19 +55,22 @@ public class HomeActivity extends Activity {
 
         myIpAddress.setText(myIpAddress.getText());
         devices = new ListDeviceTask();
+        WifiReceiver wifiReceiver = new WifiReceiver(manager);
+        wifiReceiver.start();
         Toast.makeText(this, string.device_scan_started, Toast.LENGTH_LONG).show();
-        devices.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, myIP, deviceListView, this);
+        devices.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, myIP, deviceListView, this, manager);
+        ipAddress.setText(myIP);
     }
 
     public void startChatting(View view) {
         Intent openChatWindow;
         openChatWindow = new Intent(this, ClientActivity.class);
         String ipAddressText = String.valueOf(ipAddress.getText());
-        if (ipAddressText.matches("\\d+.\\d+.\\d+.\\d+")) {
-            openChatWindow.putExtra("ipAddress", ipAddressText);
-            startActivity(openChatWindow);
-        } else
+        if (!ipAddressText.matches(IP_ADDRESS_FORMAT_REGEX)) {
             Toast.makeText(this, getString(string.warning_for_valid_ip), Toast.LENGTH_LONG).show();
+        }
+        openChatWindow.putExtra("ipAddress", ipAddressText);
+        startActivity(openChatWindow);
 
     }
 

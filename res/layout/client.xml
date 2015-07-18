@@ -29,15 +29,15 @@
             android:scrollbars="vertical"
             android:maxLines="3" />
 
-        <Button
-            android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:id="@+id/send_message"
-                android:layout_weight="1"
-                android:text="@string/send"
-                android:enabled="false"
-                android:onClick="sendMessage"
-                />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/send_message"
+            android:layout_gravity="right|bottom"
+            android:enabled="false"
+            android:onClick="sendMessage"
+            android:src="@drawable/send_button"
+            android:background="@null" />
     </LinearLayout>
 
     <ScrollView
@@ -55,5 +55,4 @@
         android:paddingRight="3dip"
                 android:scrollbars="vertical"/>
     </ScrollView>
-
 </RelativeLayout>

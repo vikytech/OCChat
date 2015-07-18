@@ -60,7 +60,7 @@ public class ServerTask extends AsyncTask {
                         try {
                             BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                             line = in.readLine();
-                            Log.d("Test message", line);
+                            Log.d("Message: ", line == null ? "No Message" : line);
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
